@@ -1,1 +1,2 @@
-react navigation requires extra steps for Android
+- First time doing anything react native, kinda blindly poking about
+- React navigation requires extra steps for Android (ejecting from expo req'd)

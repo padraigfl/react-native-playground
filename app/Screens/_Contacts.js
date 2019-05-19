@@ -7,7 +7,7 @@ import {
   ActivityIndicator // ???
 } from "react-native";
 import { Contacts } from "expo";
-import ListEntry from "../components/ListEntry";
+import ListEntry from "../components/ChatListEntry";
 import Button from "../components/Button";
 import Template from "../components/template";
 

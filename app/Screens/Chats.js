@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Contacts } from "expo";
 import uuid from "uuid/v1";
-import ListEntry from "../components/ListEntry";
+import ListEntry from "../components/ChatListEntry";
 
 import Template from "../components/template";
 

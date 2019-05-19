@@ -4,6 +4,7 @@ import {
   Text
 } from "react-native";
 import styled from "styled-components";
+import Entry from "./entry";
 const Container = styled.View`
   flex: 1;
   background-color: #eee;
@@ -19,18 +20,11 @@ const Search = styled.TextInput`
 `;
 
 const Header = styled.View`
-  flex: 1;
+  width: 100%;
   flex-direction: row;
-  margin-right: auto;
   align-items: center;
-  max-height: 60px;
+  height: 60px;
   background-color: red;
-  padding: 0px 10px;
-`;
-
-const Title = styled.Text`
-  margin-right: auto;
-  flex-grow: 1;
 `;
 
 const IconButton = styled.Button`
@@ -67,13 +61,20 @@ export default class Main extends React.Component {
 
   render() {
     const { inputValue } = this.state;
-    const { children, onAdd, onSearch, title } = this.props;
+    const { children, onAdd, onSearch, title, image } = this.props;
 
     return (
       <Container>
         <StatusBar barStyle="light-content" />
         <Header>
-          <Title>{title}</Title>
+          <Entry
+            image={image}
+            heading={title}
+            style={{ marginRight: "auto" }}
+            useImage
+            isLarge
+          />
+          {/* @todo make actions more adaptable */}
           {onSearch && (
             <IconButton
               onPress={this.toggleSearch}
