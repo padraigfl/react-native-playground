@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
   input: {
     paddingTop: 10,
     paddingRight: 15,
-    fontSize: 34,
-    color: "white",
+    fontSize: 24,
+    color: "black",
     fontWeight: "500"
   }
 });
