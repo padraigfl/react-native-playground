@@ -33,6 +33,11 @@ const IconButton = styled.Button`
   background-color: ${props => props.bgColor};
 `;
 
+const Children = styled.View`
+  flex-grow: 1;
+  background-color: pink;
+`;
+
 export default class Main extends React.Component {
   state = {
     inputValue: "",
@@ -110,7 +115,7 @@ export default class Main extends React.Component {
             onSubmitEditing={this.onSubmitEditing}
           />
         )}
-        {children}
+        <Children>{children}</Children>
       </Container>
     );
   }

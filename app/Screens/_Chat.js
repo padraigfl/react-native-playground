@@ -1,12 +1,36 @@
 import React from "react";
-import { Text, View, TextInput } from "react-native";
-import { Constants, SQLite } from "expo";
+import { Text, TextInput } from "react-native";
+import { SQLite } from "expo";
+import styled from "styled-components";
 import Template from "../components/template";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import ChatBubble from "../components/ChatBubble";
 
 const headerTitle = "nativeapp";
 const db = SQLite.openDatabase("db.db");
+
+const MessageArea = styled.ScrollView``;
+
+const InputArea = styled.View`
+  display: flex;
+  flex-direction: row;
+  background-color: blue;
+  padding: 8px 8px 20px;
+  flex-shrink: 0;
+`;
+
+const MessageInput = styled.TextInput`
+  background-color: white;
+  padding: 4px;
+  flex-grow: 1;
+  font-size: 16px;
+`;
+
+const SendButton = styled.TouchableOpacity`
+  color: red;
+  background-color: red;
+  flex-shrink: 0;
+  padding: 4px 8px;
+`;
 
 export default class Chat extends React.Component {
   state = {
@@ -96,23 +120,28 @@ export default class Chat extends React.Component {
         {/* 
           Textbox
         */}
-        <Text>test {messages.map(v => JSON.stringify(v)).join("")}</Text>
-        <TextInput
-          value={inputValue}
-          placeholder={"Send a message..."}
-          placeholderTextColor="#888"
-          multiline={true}
-          // autoCapitalize="sentences"
-          underlineColorAndroid="transparent"
-          selectionColor={"white"}
-          returnKeyType="done"
-          // autoCorrect={false}
-          blurOnSubmit={true}
-          onChangeText={this.newInputValue}
-          onSubmitEditing={this.onSubmitEditing}
-          returnKeyType="done"
-        />
-        <Button onClick={this.onSubmitEditing}>FF</Button>
+        <MessageArea>
+          {messages.map(v => (
+            <ChatBubble key={v.id} message={v.message} time={v.time} />
+          ))}
+        </MessageArea>
+        <InputArea>
+          <MessageInput
+            value={inputValue}
+            placeholder={"Send a message..."}
+            placeholderTextColor="#888"
+            multiline={true}
+            underlineColorAndroid="transparent"
+            selectionColor={"white"}
+            returnKeyType="done"
+            onChangeText={this.newInputValue}
+            onSubmitEditing={this.onSubmitEditing}
+            returnKeyType="done"
+          />
+          <SendButton onPressOut={this.onSubmitEditing}>
+            <Text>Send</Text>
+          </SendButton>
+        </InputArea>
       </Template>
     );
   }
