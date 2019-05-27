@@ -9,7 +9,7 @@ import {
 import styled from "styled-components";
 import { format } from "date-fns";
 
-const Bubble = styled.View`
+const bubbleDefaults = `
   display: flex;
   flex-grow: 1;
   flex-direction: row;
@@ -17,8 +17,17 @@ const Bubble = styled.View`
   background-color: white;
   margin: 1px 0px;
   border-radius: 20px;
-  border-bottom-right-radius: 0px;
   margin: 4px 8px 4px 24px;
+`;
+
+const Outgoing = styled.View`
+  ${bubbleDefaults}
+  border-bottom-right-radius: 0px;
+`;
+
+const Incoming = styled.View`
+  ${bubbleDefaults}
+  border-top-left-radius: 0px;
 `;
 
 const Message = styled.Text`
@@ -28,19 +37,16 @@ const Message = styled.Text`
 const TimeStamp = styled.Text`
   position: absolute;
   bottom: 2px;
-  right: 2px;
+  right: 6px;
   font-size: 12px;
 `;
 
 class ChatBubble extends Component {
   render() {
-    const { message, time, isLarge, onClick, content, style } = this.props;
-    const fullSize = content || isLarge;
+    const { isIncoming, message, time, onClick, style } = this.props;
 
     const Comp = onClick ? TouchableOpacity : View;
-    const imageSize = fullSize
-      ? { height: 60, width: 60 }
-      : { height: 40, width: 40 };
+    const Bubble = isIncoming ? Incoming : Outgoing;
     return (
       <Comp onPress={onClick} style={style}>
         <Bubble>

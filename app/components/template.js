@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Entry from "./entry";
 const Container = styled.View`
   flex: 1;
+  flex-grow: 1;
   background-color: #eee;
   color: #222;
 `;

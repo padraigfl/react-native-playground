@@ -8,13 +8,16 @@ import ChatBubble from "../components/ChatBubble";
 const headerTitle = "nativeapp";
 const db = SQLite.openDatabase("db.db");
 
-const MessageArea = styled.ScrollView``;
+const MessageArea = styled.ScrollView`
+  flex-grow: 1;
+  height: 5px;
+`;
 
 const InputArea = styled.View`
   display: flex;
   flex-direction: row;
   background-color: blue;
-  padding: 8px 8px 20px;
+  padding: 8px 16px 16px;
   flex-shrink: 0;
 `;
 
@@ -22,14 +25,17 @@ const MessageInput = styled.TextInput`
   background-color: white;
   padding: 4px;
   flex-grow: 1;
-  font-size: 16px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 `;
 
 const SendButton = styled.TouchableOpacity`
-  color: red;
+  color: white;
   background-color: red;
   flex-shrink: 0;
   padding: 4px 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 `;
 
 export default class Chat extends React.Component {
@@ -120,7 +126,12 @@ export default class Chat extends React.Component {
         {/* 
           Textbox
         */}
-        <MessageArea>
+        <MessageArea
+          ref={ref => (this.scrollView = ref)}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            this.scrollView.scrollToEnd({ animated: true });
+          }}
+        >
           {messages.map(v => (
             <ChatBubble key={v.id} message={v.message} time={v.time} />
           ))}
