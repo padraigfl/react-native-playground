@@ -4,6 +4,8 @@ import { SQLite } from "expo";
 import styled from "styled-components";
 import Template from "../components/template";
 import ChatBubble from "../components/ChatBubble";
+import { colors } from "../constants/styles";
+import { getPlaceholder } from "../components/ChatListEntry";
 
 const headerTitle = "nativeapp";
 const db = SQLite.openDatabase("db.db");
@@ -16,7 +18,7 @@ const MessageArea = styled.ScrollView`
 const InputArea = styled.View`
   display: flex;
   flex-direction: row;
-  background-color: blue;
+  background-color: ${colors.brand};
   padding: 8px 16px 16px;
   flex-shrink: 0;
 `;
@@ -31,7 +33,7 @@ const MessageInput = styled.TextInput`
 
 const SendButton = styled.TouchableOpacity`
   color: white;
-  background-color: red;
+  background-color: ${colors.light};
   flex-shrink: 0;
   padding: 4px 8px;
   border-top-right-radius: 8px;
@@ -86,12 +88,6 @@ export default class Chat extends React.Component {
     const { inputValue } = this.state;
 
     if (inputValue) {
-      console.log("test");
-      console.log([
-        this.props.navigation.state.params.id,
-        inputValue,
-        Date.now()
-      ]);
       db.transaction(tx =>
         tx.executeSql(
           `insert into msg (
@@ -114,9 +110,16 @@ export default class Chat extends React.Component {
   };
 
   render() {
+    const contactInfo = this.props.navigation.state.params;
     const { inputValue, messages } = this.state;
     return (
-      <Template title={headerTitle}>
+      <Template
+        title={
+          contactInfo.name || contactInfo.phoneNumbers[0].number || headerTitle
+        }
+        image={contactInfo.image}
+        placeholder={getPlaceholder(contactInfo)}
+      >
         {/* 
           Contact header, link to profile
         */}

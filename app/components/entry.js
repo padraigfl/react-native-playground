@@ -7,14 +7,15 @@ import {
   TouchableOpacity // like a button, onPress
 } from "react-native";
 import styled from "styled-components";
+import { colors } from "../constants/styles";
 
 const Row = styled.View`
   display: flex;
   flex-grow: 1;
   flex-direction: row;
   align-items: center;
-  background-color: white;
   margin: 1px 0px;
+  ${props => (props.bgColor ? `background-color: ${props.bgColor};` : "")}
 `;
 
 const Grow = styled.View`
@@ -73,6 +74,7 @@ const { height, width } = Dimensions.get("window");
 class Entry extends Component {
   render() {
     const {
+      bgColor,
       image,
       isLarge,
       useImage,
@@ -90,8 +92,8 @@ class Entry extends Component {
       ? { height: 60, width: 60 }
       : { height: 40, width: 40 };
     return (
-      <Comp onPress={onClick} style={style}>
-        <Row>
+      <Comp onPress={onClick}>
+        <Row bgColor={bgColor}>
           {useImage && image && (
             <View style={imageSize}>
               <Image

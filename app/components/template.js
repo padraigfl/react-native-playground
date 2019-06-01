@@ -5,11 +5,10 @@ import {
 } from "react-native";
 import styled from "styled-components";
 import Entry from "./entry";
+import { colors } from "../constants/styles";
 const Container = styled.View`
   flex: 1;
   flex-grow: 1;
-  background-color: #eee;
-  color: #222;
 `;
 const Search = styled.TextInput`
   padding-left: 15px;
@@ -25,7 +24,7 @@ const Header = styled.View`
   flex-direction: row;
   align-items: center;
   height: 60px;
-  background-color: red;
+  background-color: ${colors.brand};
 `;
 
 const IconButton = styled.Button`
@@ -36,7 +35,7 @@ const IconButton = styled.Button`
 
 const Children = styled.View`
   flex-grow: 1;
-  background-color: pink;
+  background-color: ${colors.secondary};
 `;
 
 export default class Main extends React.Component {

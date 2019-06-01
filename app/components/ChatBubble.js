@@ -2,12 +2,11 @@
 import React, { Component } from "react";
 import {
   View,
-  Text,
-  Dimensions, // gets width and height
   TouchableOpacity // like a button, onPress
 } from "react-native";
 import styled from "styled-components";
 import { format } from "date-fns";
+import { colors } from "../constants/styles";
 
 const bubbleDefaults = `
   display: flex;
@@ -28,6 +27,7 @@ const Outgoing = styled.View`
 const Incoming = styled.View`
   ${bubbleDefaults}
   border-top-left-radius: 0px;
+  colors: ${colors.accent};
 `;
 
 const Message = styled.Text`

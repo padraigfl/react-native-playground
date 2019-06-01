@@ -3,151 +3,99 @@ import {
   StyleSheet,
   View,
   ScrollView, // overflow scroll
-  ActivityIndicator, // ???
-  AsyncStorage // stores to db
+  Text,
+  ActivityIndicator // ???
 } from "react-native";
-import { Contacts } from "expo";
-import uuid from "uuid/v1";
+import { Contacts, SQLite } from "expo";
 import ListEntry from "../components/ChatListEntry";
-
 import Template from "../components/template";
+import { colors } from "../constants/styles";
 
 const headerTitle = "nativeapp";
+
+const db = SQLite.openDatabase("db.db");
 
 export default class Main extends React.Component {
   state = {
     inputValue: "",
-    loadingItems: false,
-    allItems: {},
-    contacts: [],
-    isCompleted: false
+    loadingItems: true,
+    contacts: []
   };
 
-  componentDidMount = () => {
-    this.loadingItems();
-  };
+  componentDidMount() {
+    this.getContacts();
+  }
+
   newInputValue = value => {
     this.setState({
       inputValue: value
     });
   };
 
-  loadingItems = async () => {
-    try {
-      const allItems = await AsyncStorage.getItem("ToDos");
-      this.setState({
-        loadingItems: true,
-        allItems: JSON.parse(allItems) || {}
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  onDoneAddItem = () => {
-    const { inputValue } = this.state;
-    if (inputValue !== "") {
-      this.setState(prevState => {
-        const id = uuid();
-        const newItemObject = {
-          [id]: {
-            id,
-            isCompleted: false,
-            text: inputValue,
-            createdAt: Date.now()
-          }
-        };
-        const newState = {
-          ...prevState,
-          inputValue: "",
-          allItems: {
-            ...prevState.allItems,
-            ...newItemObject
-          }
-        };
-        this.saveItems(newState.allItems);
-        return { ...newState };
-      });
-    }
-  };
-  deleteItem = id => {
-    this.setState(prevState => {
-      const allItems = prevState.allItems;
-      delete allItems[id];
-      const newState = {
-        ...prevState,
-        ...allItems
-      };
-      this.saveItems(newState.allItems);
-      return { ...newState };
-    });
-  };
-  completeItem = id => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        allItems: {
-          ...prevState.allItems,
-          [id]: {
-            ...prevState.allItems[id],
-            isCompleted: true
-          }
-        }
-      };
-      this.saveItems(newState.allItems);
-      return { ...newState };
-    });
-  };
-  incompleteItem = id => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        allItems: {
-          ...prevState.allItems,
-          [id]: {
-            ...prevState.allItems[id],
-            isCompleted: false
-          }
-        }
-      };
-      this.saveItems(newState.allItems);
-      return { ...newState };
-    });
-  };
-  deleteAllItems = async () => {
-    try {
-      await AsyncStorage.removeItem("ToDos");
-      this.setState({ allItems: {} });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  displayContacts = async () => {
+  getContacts = async () => {
     const { data } = await Contacts.getContactsAsync({
-      fields: [Contacts.Fields.Emails, Contacts.Fields.Image]
+      fields: [
+        Contacts.Fields.Emails,
+        Contacts.Fields.Image,
+        Contacts.Fields.PhoneNumbers
+      ]
     });
 
     if (data.length > 0) {
-      const contact = data[0];
-      this.setState({ contacts: data });
-      console.log(contact);
+      this.setState(
+        {
+          contacts: data,
+          loading: false
+        },
+        this.getRecentMessages
+      );
     }
   };
-  saveItems = newItem => {
-    const saveItem = AsyncStorage.setItem("To Dos", JSON.stringify(newItem));
+
+  getRecentMessages = () => {
+    db.transaction(tx =>
+      tx.executeSql(
+        `SELECT msg.*
+        FROM msg
+        JOIN (SELECT MAX(time) as time, contact, message
+              FROM msg
+              GROUP BY contact) AS mostrecent
+          ON mostrecent.contact = msg.contact
+            AND mostrecent.time = msg.time
+        ORDER BY time DESC`,
+        [],
+        (_, { rows: { _array = [] } }) => this.setState({ messages: _array }),
+        (e, b) => {
+          console.log(e);
+          console.log(b);
+          this.setState({ messages: [], newChat: true });
+        }
+      )
+    );
   };
+
   render() {
-    const { allItems, contacts, loadingItems } = this.state;
+    const { contacts, messages, loadingItems } = this.state;
     return (
-      <Template title={headerTitle} onSearch={this.displayContacts}>
+      <Template
+        title={headerTitle}
+        onSearch={() => {
+          /* search contacts */
+        }}
+        navigate={this.props.navigation.navigate}
+      >
         <View style={styles.list}>
           {loadingItems ? (
             <ScrollView contentContainerStyle={styles.scrollableList}>
-              {Object.values(contacts)
-                .reverse()
-                .map(item => (
-                  <ListEntry key={item.id} {...item} />
-                ))}
+              {messages &&
+                messages.map(
+                  item => <Text key={item.id}>{JSON.stringify(item)}</Text>
+                  // <ListEntry
+                  //   key={item.id}
+                  //   navigate={this.props.navigation.navigate}
+                  //   {...item}
+                  // />
+                )}
             </ScrollView>
           ) : (
             <ActivityIndicator size="large" color="white" />
@@ -158,18 +106,32 @@ export default class Main extends React.Component {
   }
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  centered: {
+    alignItems: "center"
+  },
+  inputContainer: {
+    marginTop: 40,
+    paddingLeft: 15
+  },
   list: {
     flex: 1,
-    marginTop: 70,
-    paddingLeft: 15,
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: colors.secondary
   },
   scrollableList: {
     marginTop: 15
   },
   column: {
+    height: 40,
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
+  },
+  deleteAllButton: {
+    marginRight: 10
   }
 });
