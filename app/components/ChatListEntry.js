@@ -1,21 +1,14 @@
 // app/components/List.js
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 import Entry from "./entry";
-
-export const getPlaceholder = ({ firstName = "", lastName = "", name }) => {
-  if (firstName && lastName) {
-    return firstName[0].toUpperCase() + lastName[0].toUpperCase();
-  }
-  if (name) {
-    return lastName[0].toUpperCase();
-  }
-  return null;
-};
+import { getPlaceholder } from "../utils/text";
 
 class List extends Component {
   render() {
     const {
+      content,
+      context,
       id,
       backgroundColor,
       name,
@@ -41,13 +34,16 @@ class List extends Component {
         image={imageAvailable && image}
         backgroundColor={backgroundColor}
         heading={name || firstName || lastName}
-        context={<Text>Text</Text>}
+        context={<Text>{context || "Text"}</Text>}
         placeholder={
           !imageAvailable && getPlaceholder({ firstName, lastName, name })
         }
         bgColor="white"
         useImage
-        content="And the rest And the rest And the rest And the rest And the rest And the rest And the rest And the rest And the rest"
+        content={
+          content ||
+          "And the rest And the rest And the rest And the rest And the rest And the rest And the rest And the rest And the rest"
+        }
       />
     );
   }

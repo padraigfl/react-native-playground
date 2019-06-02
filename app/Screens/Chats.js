@@ -44,7 +44,7 @@ export default class Main extends React.Component {
     if (data.length > 0) {
       this.setState(
         {
-          contacts: data,
+          contacts: data.reduce((acc, v) => ({ ...acc, [v.id]: v }), {}),
           loading: false
         },
         this.getRecentMessages
@@ -88,14 +88,16 @@ export default class Main extends React.Component {
           {loadingItems ? (
             <ScrollView contentContainerStyle={styles.scrollableList}>
               {messages &&
-                messages.map(
-                  item => <Text key={item.id}>{JSON.stringify(item)}</Text>
-                  // <ListEntry
-                  //   key={item.id}
-                  //   navigate={this.props.navigation.navigate}
-                  //   {...item}
-                  // />
-                )}
+                messages.map(item => (
+                  <ListEntry
+                    key={item.id}
+                    navigate={this.props.navigation.navigate}
+                    {...item}
+                    content={item.message}
+                    context={item.time}
+                    {...this.state.contacts[item.contact]}
+                  />
+                ))}
             </ScrollView>
           ) : (
             <ActivityIndicator size="large" color="white" />
@@ -106,16 +108,6 @@ export default class Main extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  centered: {
-    alignItems: "center"
-  },
-  inputContainer: {
-    marginTop: 40,
-    paddingLeft: 15
-  },
   list: {
     flex: 1,
     marginBottom: 10,
@@ -123,15 +115,5 @@ const styles = StyleSheet.create({
   },
   scrollableList: {
     marginTop: 15
-  },
-  column: {
-    height: 40,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
-  },
-  deleteAllButton: {
-    marginRight: 10
   }
 });

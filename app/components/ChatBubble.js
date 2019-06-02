@@ -17,6 +17,7 @@ const bubbleDefaults = `
   margin: 1px 0px;
   border-radius: 20px;
   margin: 4px 8px 4px 24px;
+  border: 1px solid ${colors.brand};
 `;
 
 const Outgoing = styled.View`

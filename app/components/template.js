@@ -1,12 +1,11 @@
 import React from "react";
 import {
-  StatusBar, // color of status bar on top of screen
-  Text
+  StatusBar // color of status bar on top of screen
 } from "react-native";
 import styled from "styled-components";
 import Entry from "./entry";
 import { colors } from "../constants/styles";
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
   flex-grow: 1;
 `;

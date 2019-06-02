@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Template from "../components/template";
 import ChatBubble from "../components/ChatBubble";
 import { colors } from "../constants/styles";
-import { getPlaceholder } from "../components/ChatListEntry";
+import { getPlaceholder } from "../utils/text";
 
 const headerTitle = "nativeapp";
 const db = SQLite.openDatabase("db.db");
@@ -120,15 +120,6 @@ export default class Chat extends React.Component {
         image={contactInfo.image}
         placeholder={getPlaceholder(contactInfo)}
       >
-        {/* 
-          Contact header, link to profile
-        */}
-        {/* 
-          Message area, sticky bottom
-        */}
-        {/* 
-          Textbox
-        */}
         <MessageArea
           ref={ref => (this.scrollView = ref)}
           onContentSizeChange={(contentWidth, contentHeight) => {

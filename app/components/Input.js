@@ -1,14 +1,13 @@
 // app/components/Input.js
 import React from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { inputPlaceholder } from "../utils/Colors";
 const Input = ({ inputValue, onChangeText, onDoneAddItem }) => (
   <TextInput
     style={styles.input}
     value={inputValue}
     onChangeText={onChangeText}
     placeholder="Search contacts..."
-    placeholderTextColor={inputPlaceholder}
+    placeholderTextColor="#f1a895"
     multiline={true}
     autoCapitalize="sentences"
     underlineColorAndroid="transparent"
